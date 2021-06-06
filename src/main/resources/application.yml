@@ -1,0 +1,29 @@
+spring:
+  thymeleaf:
+    prefix: classpath:/static/
+    suffix: .html
+  datasource:
+    url: jdbc:mysql://localhost:3306/mmall002?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 10MB
+  # 邮箱配置
+  mail:
+    host: smtp.qq.com
+    # 你的QQ邮箱
+    username: 2690706243@qq.com
+    # 注意这里不是邮箱密码，而是SMTP授权密码
+    password: zblggtdmwsamdddj
+
+
+##打印SQL语句
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-enums-package: com.southwind.mmall002.enums
+  mapper-locations: com/southwind/mmall002/mapper/xml/*.xml
+
+

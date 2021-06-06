@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:include="common.html :: source"></th:block>
+    <script type="text/javascript" src="/js/settlement.js"></script>
+    <script type="text/javascript" src="/layui/layui.all.js"></script>
+</head>
+<body>
+
+<th:block th:include="common.html :: header"></th:block>
+
+<div class="i_bg bg_color" style="background-image: url(/images/headBG/head04.png);border: none">
+    <div class="m_content">
+
+        <!-- 侧边目录 -->
+        <th:block th:include="common.html :: userLeft"></th:block>
+
+
+        <!-- 地址信息模块-->
+        <div class="m_right" style="background-color:transparent;">
+            <div class="mem_tit">地址列表</div>
+            <table  class="order_tab"
+                   style="width: 930px; text-align: center; margin-bottom: 30px;border: none"
+                   cellspacing="0" cellpadding="0">
+                <tbody style="border: none">
+                <tr>
+                    <td width="15%" style="border: none">地址编号</td>
+                    <td width="15%" style="border: none">具体信息</td>
+                    <td width="15%" style="border: none">备注</td>
+                    <td width="20%" style="border: none">创建时间</td>
+                    <td width="15%" style="border: none">默认地址</td>
+                    <td width="20%" style="border: none">操作</td>
+                </tr>
+
+                <tr th:each="address:${addressList}">
+                    <td th:text="${address.id}" style="border: none"></td>
+                    <input type="hidden" id="addressId" th:value="${address.id}" >
+                    <td th:text="${address.address}" style="border: none"></td>
+                    <td th:text="${address.remark}" style="border: none"></td>
+                    <td th:text="${address.createTime}" style="border: none"></td>
+                    <td th:if="${address.isdefault == 1}" style="border: none">是</td>
+                    <td th:if="${address.isdefault == 0}" style="border: none">否</td>
+                    <td style="border: none">
+                        <div class="layui-btn-group">
+                            <button type="button" class="layui-btn ">修改</button>
+                            <button type="button" class="layui-btn" onclick="removeAddress()">删除</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div>
+                <label class="layui-form-label">操作</label>
+                <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="showNewAddressPanel()">新建地址</button>
+                <button id="cancelBtn" class="layui-btn" lay-submit lay-filter="formDemo" onclick="cancelNewAddressPanel()" style="display: none">取消新建</button>
+                <form id="userNewAddress" class="layui-form" action="/userAddress/createNewAddress">
+                    <div id="createNewAddressPanel" style="display: none">
+                        <th:block th:include="common.html :: address"></th:block>
+                            <!--  按钮-->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">操作</label>
+                                <div class="layui-input-block" style="float: contour">
+                                    <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="createNewAddress()">提交新建地址</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                    </div>
+                </form>
+            <div>
+
+                <script>
+                    //取消新建地址
+                    function cancelNewAddressPanel(){
+                        document.getElementById("createNewAddressPanel").style.display="none";
+                        document.getElementById("cancelBtn").style.display="none";
+                    }
+                    //新建地址面板展开
+                    function showNewAddressPanel() {
+                       document.getElementById("createNewAddressPanel").style.display="inline";
+                       document.getElementById("cancelBtn").style.display="inline";
+                    }
+                    function createNewAddress() {
+                        //都填写了才允许提交表单
+                        //此处 lay-verify="required" 要求为必填
+                        $("#userNewAddress").submit();
+                    }
+                    //配置插件目录
+                    layui.config({
+                        base: '../mods/'
+                        , version: '1.0'
+                    });
+                    //一般直接写在一个js文件中
+                    layui.use(['layer', 'form', 'layarea'], function () {
+                        var layer = layui.layer
+                            , form = layui.form
+                            , layarea = layui.layarea;
+
+                        let obj1 = layarea.render({
+                            elem: '#area-picker',
+                            change: function (res) {
+                                //选择结果
+                                console.log(res);
+                            }
+                        });
+                        layarea.render({
+                            elem: '#area-picker2',
+                            change: function (res) {
+                                //选择结果
+                                console.log(res);
+                            }
+                        });
+                        layarea.render({
+                            elem: '#area-picker3',
+                            change: function (res) {
+                                //选择结果
+                                console.log(res);
+                            }
+                        });
+                        layarea.render({
+                            elem: '#area-picker4',
+                            data: {
+                                province: "广东省",
+                                city: "深圳市",
+                                county: "龙岗区",
+                            },
+                            change: function (res) {
+                                //选择结果
+                                console.log(res);
+                            }
+                        });
+
+                        //第一个重载
+                        setTimeout(() => {
+                            obj1.reload({
+                                data: {
+                                    province: "河北省",
+                                    city: "邢台市",
+                                    county: "柏乡县",
+                                }
+                            });
+                        }, 3000);
+                    });
+                </script>
+
+            </div>
+        </div>
+
+</div>
+
+<!--<th:block th:include="common.html :: footer"></th:block>-->
+<th:block th:include="common.html :: permit"></th:block>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分类商品列表</title>
+    <th:block th:include="common.html :: source"></th:block>
+</head>
+<body>
+
+<th:block th:include="common.html :: header"></th:block>
+
+<div class="i_bg">
+    <div class="content mar_20">
+        <div id="favoriteList"></div>
+        <div class="l_list">
+            <div class="list_c">
+                <ul class="cate_list">
+                    <li th:each="killProductOne:${killProduct}">
+                        <div class="name">
+                            已售件数:&nbsp;<span th:text="${killProductOne.saled}" style="color: #e02d02"></span>
+                        </div>
+                        <div class="name">
+                            <a th:href="'/product/findById/'+${killProductOne.id}">商品名称:&nbsp;<span th:text="${killProductOne.name}"></span></a>
+                        </div>
+                        <div class="name">
+                            店铺名称:&nbsp;<span th:text="${killProductOne.storeName}"></span>
+                        </div>
+                        <div class="price">
+                            秒杀价格￥<span th:text="${killProductOne.price}" style="color: red"></span>
+                        </div>
+                        <div class="price">
+                            秒杀时长:&nbsp;<span th:text="${killProductOne.killtime}" style="color: red"></span>
+                        </div>
+                        <div class="img">
+                            <a th:href="'/stock/findById/'+${killProductOne.id}">
+                                <img th:src="'/images/'+${killProductOne.fileName}" width="185" height="155" />
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:include="common.html :: footer"></th:block>
+<th:block th:include="common.html :: permit"></th:block>
+
+</body>
+</html>

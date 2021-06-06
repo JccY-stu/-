@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--导入 页面 相关js和相关css 以及 layui 相关css -->
+    <th:block th:include="common.html :: source"></th:block>
+
+    <!--导入 laydate 相关css-->
+    <link type="text/css" rel="stylesheet" href="/layui/css/modules/laydate/default/laydate.css"/>
+
+    <!--导入 laydate 相关js-->
+    <script type="text/javascript" src="/layui/lay/modules/laydate.js"></script>
+
+    <!--导入 layui 相关js-->
+    <script type="text/javascript" src="/layui/layui.all.js"></script>
+    <script type="text/javascript" src="/layui/layui.js"></script>
+</head>
+<body>
+
+<th:block th:include="common.html :: header"></th:block>
+<div class="i_bg bg_color" style="background-image: url(/images/bg03.jpg);height: 800px" >
+    <div class="m_content">
+
+        <!--用户侧边目录 -->
+        <th:block th:include="common.html :: userLeft"></th:block>
+
+
+        <span class="layui-inline" id="test-n1" style="float: right;"></span>
+        <!-- 个人信息-->
+        <div class=".m_right_userInfo" id="content"  style="background-color:transparent;width: 970px">
+            <div class="m_des" >
+                <table border="0" style="width:870px; line-height:22px;" cellspacing="0" cellpadding="0">
+                    <tr valign="top">
+                        <td width="115"><img th:src="'/images/'+${session.user.fileName}" width="90" height="90" /></td>
+                        <span>
+                            <td>
+                                <div class="m_user" th:text="${session.user.userName}"></div><br />
+                                <p>
+                                    性别:
+                                    <span th:text="${session.user.gender.value}">女</span>
+                                    <br /><br />
+                                    邮箱:
+                                    <span th:text="${session.user.email}"></span><br /><br />
+                                    电话:
+                                    <span th:text="${session.user.mobile}"></span><br /><br />
+                                    默认收货地址:
+                                    <span th:text="${address.address}"></span><br /><br />
+                                    默认收货备注:
+                                    <span th:text="${address.remark}"></span><br /><br />
+                                </p>
+                            </td>
+                        </span>
+                    </tr>
+                </table>
+            </div>
+
+            <script>
+                laydate.render({
+                    elem: '#test-n1'
+                    ,position: 'static'
+                });
+            </script>
+
+            <!-- 修改个人信息 -->
+            <div class="layui-form" >
+
+                <!--  头像上传-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">头像</label>
+                    <div class="layui-upload">
+                        <!-- 上传按钮 -->
+                        <button type="button" class="layui-btn" id="test1">上传头像</button>
+                        <span style="float: right;margin-right: 550px">
+                            <button type="button" class="layui-btn"  id="reviseMsg" onclick="showReviseMsg()" >修改信息</button>
+                            <button type="button" class="layui-btn"  id="cancelReviseMsg" onclick="cancelReviseMsg()" style="display: none">取消修改</button>
+                        </span>
+                        <!-- 预览图片 -->
+                        <img class="layui-upload-img" id="demo1">
+                        <p id="demoText"></p>
+
+                    </div>
+
+                </div>
+
+                <script>
+                   layui.use(['upload', 'element', 'layer'], function() {
+                       var $ = layui.jquery
+                           , upload = layui.upload
+                           , element = layui.element
+                           , layer = layui.layer;
+
+                       //常规使用 - 普通图片上传
+                       var uploadInst = upload.render({
+                           elem: '#test1'
+                           , url: '/file/upLoadHead' //改成您自己的上传接口
+                           , before: function (obj) {
+                               //预读本地文件示例，不支持ie8
+                               obj.preview(function (index, file, result) {
+                                   $('#demo1').attr('src', result); //图片链接（base64）
+                               });
+
+                               element.progress('demo', '0%'); //进度条复位
+                               layer.msg('上传中', {icon: 16, time: 0});
+                           }
+                           , done: function (res) {
+                               //如果上传失败
+                               if (res.code > 0) {
+                                   return layer.msg('上传成功啦');
+                               }
+                               $('#demoText').html(''); //置空上传失败的状态
+                           }
+                           , error: function () {
+                               //演示失败状态，并实现重传
+                               var demoText = $('#demoText');
+                               demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                               demoText.find('.demo-reload').on('click', function () {
+                                   uploadInst.upload();
+                               });
+                           }
+                           //进度条
+                           , progress: function (n, index, e) {
+                               element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
+                               if (n == 100) {
+                                   layer.msg('上传完毕', {icon: 1});
+                               }
+                           }
+                       });
+                   });
+                </script>
+
+                <!-- 基本信息修改 -->
+                <form id="userMsg" class="layui-form" action="/user/reviseUserInfo" style="display: none">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="r_email" name="r_email" required  lay-verify="required" pattern="^\w+@\w+(\.\w+){1,2}$" placeholder="请确保您的邮箱必须可用哟       喵~小杨爱小阮" autocomplete="off" class="layui-input" style="width: 850px">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">电话</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="r_mobile" name="r_mobile" required  lay-verify="required" pattern="^(13|15|18|19)\d{9}$" placeholder="电话号码一定要联系的上啦       喵~小杨爱小阮" autocomplete="off" class="layui-input" style="width: 850px">
+                        </div>
+                    </div>
+                    <!--  地址栏 -->
+                    <th:block th:include="common.html :: address"></th:block>
+                    <!--  按钮-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">操作</label>
+                        <div class="layui-input-block" style="float: contour">
+                            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="reviseMyMsg()">提交新建地址</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+             </form>
+
+        </div>
+
+            <script type="text/javascript">
+
+                //展示修改信息页面
+                function showReviseMsg(){
+                    document.getElementById("userMsg").style.display="inline";
+                    document.getElementById("cancelReviseMsg").style.display="inline";
+                }
+                //取消修改
+                function cancelReviseMsg(){
+                    document.getElementById("userMsg").style.display="none";
+                    document.getElementById("cancelReviseMsg").style.display="none";
+                }
+
+                layui.use('form', function(){  //此段代码必不可少
+                    var form = layui.form;
+                    form.render();
+                });
+                function reviseMyMsg() {
+                    //拿到邮箱、电话 方便判断是否填写完整
+                    var r_email = document.getElementById("r_email");
+                    var r_mobile = document.getElementById("r_mobile");
+
+                    //都填写了才允许提交表单
+                    if(((r_email.value.length) != 0) && ((r_mobile.value.length) != 0)) {
+                        //提交表单
+                        $("#userMsg").submit();
+                    }
+                }
+            </script>
+            <script>
+                //配置插件目录
+                layui.config({
+                    base: '../mods/'
+                    , version: '1.0'
+                });
+                //一般直接写在一个js文件中
+                layui.use(['layer', 'form', 'layarea'], function () {
+                    var layer = layui.layer
+                        , form = layui.form
+                        , layarea = layui.layarea;
+
+                    let obj1 = layarea.render({
+                        elem: '#area-picker',
+                        change: function (res) {
+                            //选择结果
+                            console.log(res);
+                        }
+                    });
+                    layarea.render({
+                        elem: '#area-picker2',
+                        change: function (res) {
+                            //选择结果
+                            console.log(res);
+                        }
+                    });
+                    layarea.render({
+                        elem: '#area-picker3',
+                        change: function (res) {
+                            //选择结果
+                            console.log(res);
+                        }
+                    });
+                    layarea.render({
+                        elem: '#area-picker4',
+                        data: {
+                            province: "广东省",
+                            city: "深圳市",
+                            county: "龙岗区",
+                        },
+                        change: function (res) {
+                            //选择结果
+                            console.log(res);
+                        }
+                    });
+
+                    //第一个重载
+                    setTimeout(() => {
+                        obj1.reload({
+                            data: {
+                                province: "河北省",
+                                city: "邢台市",
+                                county: "柏乡县",
+                            }
+                        });
+                    }, 3000);
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
+<!--<th:block th:include="common.html :: footer"></th:block>-->
+<th:block th:include="common.html :: permit"></th:block>
+
+</body>
+</html>
