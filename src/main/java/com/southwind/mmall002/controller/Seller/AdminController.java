@@ -195,7 +195,7 @@ public class AdminController {
      */
     @GetMapping("/newProduct")
     public String toNewProduct(){
-        return "/page/form";
+        return "/page/upProduct";
     }
 
     /**
