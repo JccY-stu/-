@@ -67,7 +67,7 @@
           "child": [
             {
               "title": "商品上架",
-              "href": "../page/form.html",
+              "href": "../page/upProduct.html",
               "icon": "fa fa-list-alt",
               "target": "_self"
             },
