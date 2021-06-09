@@ -49,7 +49,7 @@
         },
         {
           "title": "秒杀上架",
-          "href": "../page/setting.html",
+          "href": "../page/killsList.html",
           "icon": "fa fa-gears",
           "target": "_self"
         },
