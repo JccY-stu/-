@@ -138,6 +138,12 @@
           "target": "",
           "child": [
             {
+              "title": "日志记录",
+              "href": "../page/LogOption.html",
+              "icon": "fa fa-snowflake-o",
+              "target": "_self"
+            },
+            {
               "title": "按钮示例",
               "href": "../page/button.html",
               "icon": "fa fa-snowflake-o",

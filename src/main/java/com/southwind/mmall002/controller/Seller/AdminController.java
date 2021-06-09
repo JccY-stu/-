@@ -3,6 +3,7 @@ package com.southwind.mmall002.controller.Seller;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
+import com.southwind.mmall002.entity.AdminOption;
 import com.southwind.mmall002.entity.Stores;
 import com.southwind.mmall002.entity.User;
 import com.southwind.mmall002.service.*;
@@ -46,6 +47,8 @@ public class AdminController {
     @Autowired
     private EmailSendService emailSendService;
 
+    @Autowired
+    AdminOptionService adminOptionService;
 
     /**
      * 跳转 后台管理
@@ -167,6 +170,30 @@ public class AdminController {
 
         //更新：已经将 orderQuantity 通过 findAllUserBySubStoreID() 写入 StoreFanMsgVO
         result.put("data", fanslist);
+        return result;
+    }
+
+    /**
+     * 获取 日志信息
+     */
+    @GetMapping("/logOptionList")
+    @ResponseBody
+    public JSONObject showLogOption(HttpSession session){
+        User user = (User) session.getAttribute("user");
+        JSONObject result = new JSONObject();
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("store_id",user.getStoreId());
+        //获取 logOptionList 列表
+        List<AdminOption> logOptionList = adminOptionService.list(wrapper);
+
+        result.put("code", "0");
+        result.put("msg", "操作成功！");
+        result.put("count",logOptionList.size());
+        //此处再加入一个订单数量
+        //则查询每个用户在该店的订单数量，写入 orderQuantity 然后 传给前端 涉及到联表查询，先放下不做
+
+        //更新：已经将 orderQuantity 通过 findAllUserBySubStoreID() 写入 StoreFanMsgVO
+        result.put("data", logOptionList);
         return result;
     }
 

@@ -196,7 +196,8 @@ public class ProductController {
      * 跳转 商品上架页面
      */
     @PostMapping("/NewProduct")
-    public String upNewProduct(String productName,
+    @ResponseBody
+    public void upNewProduct(String productName,
                                Integer productQuantity,
                                Integer product_One,
                                Integer product_Two,
@@ -219,8 +220,8 @@ public class ProductController {
         product.setStoreId(seller.getStoreId());
         product.setStoreName(seller.getStoreName());
         productService.save(product);
-
-        return "redirect:/admin/newProduct";
+//
+//        return "redirect:/admin/newProduct";
     }
 
     /**
@@ -229,7 +230,6 @@ public class ProductController {
      * 注意 这些必须先上传商品信息，拿到要上传图片的 商品 ID 因为设置了 商品 ID 自增
      */
     @PostMapping("/ProductPic")
-    @ResponseBody
     public String uploadProductPic(@RequestParam("file") MultipartFile file, HttpSession session){
         //调用 UploadService 上传到 /static/images 目录下
         //获得新头像的文件名
