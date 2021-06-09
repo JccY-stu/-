@@ -55,7 +55,7 @@
         },
         {
           "title": "粉丝列表",
-          "href": "../page/table.html",
+          "href": "../page/fansList.html",
           "icon": "fa fa-file-text",
           "target": "_self"
         },

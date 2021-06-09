@@ -115,7 +115,7 @@ public class AdminController {
         return "redirect:/admin/adminPwd";
     }
     /**
-     * 主页面
+     * 主 页面
      * @return
      */
     @GetMapping("/welcome")
